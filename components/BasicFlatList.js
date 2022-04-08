@@ -13,8 +13,8 @@ import {
 import Swipeout from 'react-native-swipeout';
 
 import flatListData from '../data/flatListData';
-//import AddModal from './AddModal';
-//import EditModal from './EditMadal';
+import AddModal from './AddModal';
+import EditModal from './EditModal';
 
 class FlatListItem extends Component {
     constructor(props) {
@@ -24,13 +24,13 @@ class FlatListItem extends Component {
             numberOfrefresh: 0,
         }
     }
-    // refreshFlatListItem = () => {
-    //     this.setState((prevState) => {
-    //         return {
-    //             numberOfrefresh: prevState.numberOfrefresh++
-    //         }
-    //     })
-    // }
+    refreshFlatListItem = () => {
+        this.setState((prevState) => {
+            return {
+                numberOfrefresh: prevState.numberOfrefresh++
+            }
+        })
+    }
     render() {
         const swipeSetting = {
             autoClose: true,
@@ -43,12 +43,12 @@ class FlatListItem extends Component {
                 this.setState({ activeRowKey: this.props.item.key })
             },
             right: [
-                // {
-                //     onPress: () => {
-                //         this.props.parentFlatList.refs.editModal.showEditModal(flatListData[this.props.index], this)
-                //     },
-                //     text: 'Edit', type: 'primary'
-                // },
+                {
+                    onPress: () => {
+                        this.props.parentFlatList.refs.editModal.showEditModal(flatListData[this.props.index], this)
+                    },
+                    text: 'Edit', type: 'primary'
+                },
                 {
                     onPress: () => {
                         const deleteRow = this.state.activeRowKey
@@ -121,27 +121,27 @@ export default class BasicFlatList extends Component {
         this.state = ({
             deleteRowKey: null
         })
-        //this._onPressAdd = this._onPressAdd.bind(this)
+        this._onPressAdd = this._onPressAdd.bind(this)
     }
-    refreshFlatList = (deleteKey) => {
+    refreshFlatList = (ativeKey) => {
         this.setState((prevState) => {
             return {
-                deleteRowKey: deleteKey
+                deleteRowKey: ativeKey
             }
         })
-        //this.refs.flatList.scrollToEnd()
+        this.refs.flatList.scrollToEnd()
     }
-    // _onPressAdd() {
-    //     alert('You add Item')
-    //     this.refs.addModal.showAddModal()
-    // }
+    _onPressAdd() {
+        //alert('You add Item')
+        this.refs.addModal.showAddModal()
+    }
     render() {
         return (
             <View style={{
                 flex: 1,
                 marginTop: Platform.OS === 'ios' ? 34 : 0,
             }} >
-                {/* <View style={{
+                <View style={{
                     backgroundColor: 'tomato',
                     height: 64,
                     flexDirection: 'row',
@@ -161,9 +161,9 @@ export default class BasicFlatList extends Component {
                             source={require('../icons/icons-add.png')}
                         />
                     </TouchableHighlight>
-                </View> */}
+                </View>
                 <FlatList
-                    //ref={'flatList'}
+                    ref={'flatList'}
                     data={flatListData}
                     renderItem={({ item, index }) => {
                         console.log(`Item = ${JSON.stringify(item)}, index = ${index}`)
@@ -176,8 +176,8 @@ export default class BasicFlatList extends Component {
                         )
                     }}
                 />
-                {/* <AddModal ref={'addModal'} parentFlatList={this} />
-                <EditModal ref={'editModal'} parentFlatList={this} /> */}
+                <AddModal ref={'addModal'} parentFlatList={this} />
+                <EditModal ref={'editModal'} parentFlatList={this} />
             </View>
         )
     }
