@@ -10,20 +10,20 @@ import {
     Platform,
     TouchableHighlight,
 } from 'react-native';
-//import Swipeout from 'react-native-swipeout';
+import Swipeout from 'react-native-swipeout';
 
 import flatListData from '../data/flatListData';
 //import AddModal from './AddModal';
 //import EditModal from './EditMadal';
 
 class FlatListItem extends Component {
-    // constructor(props) {
-    //     super(props)
-    //     this.state = {
-    //         activeRowKey: null,
-    //         numberOfrefresh: 0,
-    //     }
-    // }
+    constructor(props) {
+        super(props)
+        this.state = {
+            activeRowKey: null,
+            numberOfrefresh: 0,
+        }
+    }
     // refreshFlatListItem = () => {
     //     this.setState((prevState) => {
     //         return {
@@ -32,103 +32,77 @@ class FlatListItem extends Component {
     //     })
     // }
     render() {
-        // const swipeSetting = {
-        //     autoClose: true,
-        //     onClose: (secId, rowId, direction) => {
-        //         if (this.state.activeRowKey = ! null) {
-        //             this.setState({ activeRowKey: null })
-        //         }
-        //     },
-        //     onOpen: (secId, rowId, direction) => {
-        //         this.setState({ activeRowKey: this.props.item.key })
-        //     },
-        //     right: [
-        //         {
-        //             onPress:() => {
-        //                 this.props.parentFlatList.refs.editModal.showEditModal(flatListData[this.props.index], this)
-        //             },
-        //             text: 'Edit', type: 'primary'
-        //         },
-        //         {
-        //             onPress: () => {
-        //                 Alert.alert(
-        //                     'Alert',
-        //                     'Are you sure you want to delete ?',
-        //                     [
-        //                         { text: 'No', onPress: () => console.log(`Cancel Pressed`), style: 'cancel' },
-        //                         {
-        //                             text: 'Yes', onPress: () => {
-        //                                 flatListData.splice(this.props.index, 1)
-        //                                 this.props.parentFlatList.refreshFlatList(this.state.activeRowKey)
-        //                             }
-        //                         }
-        //                     ],
-        //                     { cancelable: true }
-        //                 )
-        //             },
-        //             text: 'Delete', type: 'delete'
-        //         }
-        //     ],
-        //     rowId: this.props.index,
-        //     secId: 1
-        // }
+        const swipeSetting = {
+            autoClose: true,
+            onClose: (secId, rowId, direction) => {
+                if (this.state.activeRowKey = ! null) {
+                    this.setState({ activeRowKey: null })
+                }
+            },
+            onOpen: (secId, rowId, direction) => {
+                this.setState({ activeRowKey: this.props.item.key })
+            },
+            right: [
+                // {
+                //     onPress: () => {
+                //         this.props.parentFlatList.refs.editModal.showEditModal(flatListData[this.props.index], this)
+                //     },
+                //     text: 'Edit', type: 'primary'
+                // },
+                {
+                    onPress: () => {
+                        const deleteRow = this.state.activeRowKey
+                        Alert.alert(
+                            'Alert',
+                            'Are you sure you want to delete ?',
+                            [
+                                { text: 'No', onPress: () => console.log(`Cancel Pressed`), style: 'cancel' },
+                                {
+                                    text: 'Yes', onPress: () => {
+                                        flatListData.splice(this.props.index, 1)
+                                        this.props.parentFlatList.refreshFlatList(deleteRow)
+                                    }
+                                }
+                            ],
+                            { cancelable: true }
+                        )
+                    },
+                    text: 'Delete', type: 'delete'
+                }
+            ],
+            rowId: this.props.index,
+            sectionID: 1,
+        }
         return (
-            // <Swipeout {...swipeSetting}>
-            //     <View style={{
-            //         flex: 1,
-            //         flexDirection: 'column'
-            //     }} >
-            //         <View style={{
-            //             flex: 1,
-            //             flexDirection: 'row',
-            //             //backgroundColor: this.props.index % 2 == 0 ? 'mediumseagreen' : 'tomato'
-            //             backgroundColor: 'mediumseagreen'
-            //         }} >
-            //             <Image
-            //                 style={{ width: 100, height: 100, margin: 5 }}
-            //                 source={{ uri: this.props.item.imageUrl }}
-            //             />
-            //             <View style={{
-            //                 flex: 1,
-            //                 flexDirection: 'column'
-            //             }} >
-            //                 <Text style={style.flatListItem} >{this.props.item.name}</Text>
-            //                 <Text style={style.flatListItem} >{this.props.item.foodDescription}</Text>
-            //             </View>
-            //         </View>
-            //         <View style={{
-            //             height: 2,
-            //             backgroundColor: 'white',
-            //         }} />
-            //     </View>
-            // </Swipeout>
-            <View style={{
-                flex: 1,
-                flexDirection: 'column'
-            }} >
+            <Swipeout {...swipeSetting}>
                 <View style={{
                     flex: 1,
-                    flexDirection: 'row',
-                    //backgroundColor: this.props.index % 2 == 0 ? 'mediumseagreen' : 'tomato'
-                    backgroundColor: 'mediumseagreen'
+                    flexDirection: 'column'
                 }} >
-                    <Image
-                        style={{ width: 100, height: 100, margin: 5 }}
-                        source={{ uri: this.props.item.imageUrl }}
-                    />
                     <View style={{
                         flex: 1,
-                        flexDirection: 'column'
+                        flexDirection: 'row',
+                        //backgroundColor: this.props.index % 2 == 0 ? 'mediumseagreen' : 'tomato'
+                        backgroundColor: 'mediumseagreen'
                     }} >
-                        <Text style={style.flatListItem} >{this.props.item.name}</Text>
-                        <Text style={style.flatListItem} >{this.props.item.foodDescription}</Text>
+                        <Image
+                            style={{ width: 100, height: 100, margin: 5 }}
+                            source={{ uri: this.props.item.imageUrl }}
+                        />
+                        <View style={{
+                            flex: 1,
+                            flexDirection: 'column'
+                        }} >
+                            <Text style={style.flatListItem} >{this.props.item.name}</Text>
+                            <Text style={style.flatListItem} >{this.props.item.foodDescription}</Text>
+                        </View>
                     </View>
+                    <View style={{
+                        height: 2,
+                        backgroundColor: 'white',
+                    }} />
                 </View>
-                <View style={{
-                    height: 2,
-                    backgroundColor: 'white',
-                }} />
-            </View>
+            </Swipeout>
         )
     }
 }
@@ -142,27 +116,25 @@ const style = StyleSheet.create({
 })
 
 export default class BasicFlatList extends Component {
-    /*
     constructor(props) {
         super(props)
         this.state = ({
             deleteRowKey: null
         })
-        this._onPressAdd = this._onPressAdd.bind(this)
+        //this._onPressAdd = this._onPressAdd.bind(this)
     }
-    refreshFlatList = (activeKey) => {
+    refreshFlatList = (deleteKey) => {
         this.setState((prevState) => {
             return {
-                deleteRowKey: activeKey
+                deleteRowKey: deleteKey
             }
         })
-        this.refs.flatList.scrollToEnd()
+        //this.refs.flatList.scrollToEnd()
     }
-    _onPressAdd() {
-        //alert('You add Item')
-        this.refs.addModal.showAddModal()
-    }
-    */
+    // _onPressAdd() {
+    //     alert('You add Item')
+    //     this.refs.addModal.showAddModal()
+    // }
     render() {
         return (
             <View style={{
@@ -199,7 +171,7 @@ export default class BasicFlatList extends Component {
                             <FlatListItem
                                 item={item}
                                 index={index}
-                            //parentFlatList={this}
+                                parentFlatList={this}
                             />
                         )
                     }}
