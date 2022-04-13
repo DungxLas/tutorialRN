@@ -9,12 +9,14 @@ import {
     Alert,
     Platform,
     TouchableHighlight,
+    RefreshControl,
 } from 'react-native';
 import Swipeout from 'react-native-swipeout';
 
 import flatListData from '../data/flatListData';
 import AddModal from './AddModal';
 import EditModal from './EditModal';
+import { getFoodsFromServer } from '../netWorking/Server'
 
 class FlatListItem extends Component {
     constructor(props) {
@@ -87,7 +89,7 @@ class FlatListItem extends Component {
                     }} >
                         <Image
                             style={{ width: 100, height: 100, margin: 5 }}
-                            source={{ uri: this.props.item.imageUrl }}
+                            source={{ uri: 'http://' + this.props.item.imageUrl }}
                         />
                         <View style={{
                             flex: 1,
@@ -119,9 +121,27 @@ export default class BasicFlatList extends Component {
     constructor(props) {
         super(props)
         this.state = ({
-            deleteRowKey: null
+            deleteRowKey: null,
+            refreshing: false,
+            foodsFromServer: [],
         })
         this._onPressAdd = this._onPressAdd.bind(this)
+    }
+    componentDidMount() {
+        this.refreshDataFromServer();
+    }
+    refreshDataFromServer = () => {
+        this.setState({ refreshing: true });
+        getFoodsFromServer().then((foods) => {
+            this.setState({ foodsFromServer: foods });
+            this.setState({ refreshing: false });
+        }).catch((error) => {
+            this.setState({ foodsFromServer: [] });
+            this.setState({ refreshing: false });
+        })
+    }
+    onRefresh = () => {
+        this.refreshDataFromServer();
     }
     refreshFlatList = (ativeKey) => {
         this.setState((prevState) => {
@@ -164,7 +184,8 @@ export default class BasicFlatList extends Component {
                 </View>
                 <FlatList
                     ref={'flatList'}
-                    data={flatListData}
+                    // data={flatListData}
+                    data={this.state.foodsFromServer}
                     renderItem={({ item, index }) => {
                         console.log(`Item = ${JSON.stringify(item)}, index = ${index}`)
                         return (
@@ -175,6 +196,10 @@ export default class BasicFlatList extends Component {
                             />
                         )
                     }}
+                    refreshControl={<RefreshControl
+                        refreshing={this.state.refreshing}
+                        onRefresh={this.onRefresh}
+                    />}
                 />
                 <AddModal ref={'addModal'} parentFlatList={this} />
                 <EditModal ref={'editModal'} parentFlatList={this} />
