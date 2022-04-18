@@ -22,4 +22,12 @@ async function getFoodsFromServer() {
     }
 }
 
+// async function insertNewFoodToServer(params) {
+//     try{
+//         let response = await
+//     } catch (error) {
+//         console.error(`Error is: ${error}`);
+//     }
+// }
+
 export { getFoodsFromServer };
